@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }, child:loading?const CircularProgressIndicator():const Text('Login')),
           const SizedBox(height: 10),
           TextButton(onPressed: (){
-            Navigator.push(context,MaterialPageRoute(builder: (context)=>const SignupScreen()));
+            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const SignupScreen()));
           }, child: const Text("Don't have an account"))
         ],
         ),
