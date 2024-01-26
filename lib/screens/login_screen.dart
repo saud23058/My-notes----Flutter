@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_notes/screens/home_screen.dart';
 import 'package:my_notes/screens/signup_screen.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -24,7 +25,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     FirebaseAuth _auth = FirebaseAuth.instance;
     try{
-      await _auth.signInWithEmailAndPassword(email: email.text.toString(), password: password.text.toString());
+      await _auth.signInWithEmailAndPassword(email: email.text.toString(), password: password.text.toString()).then((value){
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+      });
     }on FirebaseAuth catch(e){
       setState(() {
         loading=false;
