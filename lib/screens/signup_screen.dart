@@ -33,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
       });
     }on FirebaseAuth catch(e){
       setState(() {
-        loading =true;
+        loading =false;
       });
     }
   }
