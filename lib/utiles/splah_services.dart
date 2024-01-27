@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../screens/home_screen.dart';
-import '../screens/login_screen.dart';
+import 'package:my_notes/routes/routes.dart';
+
 
 class SplashServices{
   void islog(BuildContext context){
-    final _auth= FirebaseAuth.instance.currentUser;
-    if(_auth!=null){
-      Timer(Duration(seconds: 3), () {
-        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const HomeScreen()));
+    final auth= FirebaseAuth.instance.currentUser;
+    if(auth!=null){
+      Timer(const Duration(seconds: 3), () {
+        Navigator.of(context).pushNamedAndRemoveUntil(homeRoute, (route) => false);
       });
 
     }
     else{
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const LoginScreen()));
+      Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
     }
   }
 }

@@ -31,8 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
         email: email.text.toString(),
         password: password.text.toString(),
       );
-      // If login is successful, navigate to the HomeScreen
-      Navigator.of(context).pushNamedAndRemoveUntil(homeRoute, (route) => false);
+      final user = FirebaseAuth.instance.currentUser;
+      if(user?.emailVerified ?? false){
+        Navigator.of(context).pushNamedAndRemoveUntil(homeRoute, (route) => false);
+      }else{
+        Navigator.of(context).pushNamedAndRemoveUntil(verifyEmailRoute, (route) => false);
+      }
+
     } on FirebaseAuthException catch (e) {
       // Handle different Firebase authentication errors
       String errorMessage;
