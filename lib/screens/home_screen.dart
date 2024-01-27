@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_notes/screens/login_screen.dart';
-import 'package:my_notes/utiles/menu_action.dart';
-import 'dart:developer' as devtools show log;
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 

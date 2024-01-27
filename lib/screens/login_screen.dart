@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_notes/screens/home_screen.dart';
 import 'package:my_notes/screens/signup_screen.dart';
+import '../Error_Handling/error_dialoge.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -19,21 +20,41 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void login()async{
+  void login() async {
     setState(() {
-      loading=true;
+      loading = true;
     });
     FirebaseAuth _auth = FirebaseAuth.instance;
-    try{
-      await _auth.signInWithEmailAndPassword(email: email.text.toString(), password: password.text.toString()).then((value){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
-      });
-    }on FirebaseAuth catch(e){
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email.text.toString(),
+        password: password.text.toString(),
+      );
+      // If login is successful, navigate to the HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      // Handle different Firebase authentication errors
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = 'User not found';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Wrong password';
+      } else {
+        // Handle other Firebase authentication errors
+        errorMessage = 'An error occurred: ${e.message}';
+      }
+      // Show error dialog
+      showErrorDialog(context, errorMessage);
+    } finally {
       setState(() {
-        loading=false;
+        loading = false;
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,3 +90,5 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
+
