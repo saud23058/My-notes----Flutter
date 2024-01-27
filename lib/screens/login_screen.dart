@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_notes/screens/home_screen.dart';
+import 'package:my_notes/routes/routes.dart';
+import 'package:my_notes/routes/routes.dart';
 import 'package:my_notes/screens/signup_screen.dart';
 import '../Error_Handling/error_dialoge.dart';
 class LoginScreen extends StatefulWidget {
@@ -31,10 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
         password: password.text.toString(),
       );
       // If login is successful, navigate to the HomeScreen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      Navigator.of(context).pushNamedAndRemoveUntil(homeRoute, (route) => false);
     } on FirebaseAuthException catch (e) {
       // Handle different Firebase authentication errors
       String errorMessage;
@@ -82,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
           }, child:loading?const CircularProgressIndicator():const Text('Login')),
           const SizedBox(height: 10),
           TextButton(onPressed: (){
-            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>const SignupScreen()));
+            Navigator.of(context).pushNamedAndRemoveUntil(signupRoute, (route) => false);
           }, child: const Text("Don't have an account"))
         ],
         ),
