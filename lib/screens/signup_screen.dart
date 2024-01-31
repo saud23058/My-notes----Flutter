@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:my_notes/Error_Handling/error_dialoge.dart';
 import 'package:my_notes/routes/routes.dart';
 import 'package:my_notes/screens/verify_email.dart';
+import 'package:my_notes/services/auth_services.dart';
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
@@ -33,15 +34,13 @@ class _SignupScreenState extends State<SignupScreen> {
       await user?.sendEmailVerification();
       Navigator.push(context, MaterialPageRoute(builder:(context)=>VerifyEmail() ));
     }on FirebaseAuthException catch(e){
-      String errormessage;
       if(e.code=='email-already-in-use'){
-        errormessage='Email already used in another account';
+        showErrorDialog(context,'Email already used in another account');
       }else if(e.code=='weak-passward'){
-        errormessage='Weak Passward';
-      }else{
-        errormessage= 'Error occurred : ${e.code}';
+        showErrorDialog(context,'Weak Passward');
+      }else {
+        showErrorDialog(context, 'Error occurred : ${e.code}');
       }
-      showErrorDialog(context, errormessage);
     }finally{
       setState(() {
         loading =false;

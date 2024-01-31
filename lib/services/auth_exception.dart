@@ -1,10 +1,10 @@
 // login Exceptions
 class UserNotAuthFoundException implements Exception{}
 
-class WrongPasswardAuthException implements Exception{}
+class WrongPasswordAuthException implements Exception{}
 
 // Register Exceptions
-class WeakPasswardAuthException implements Exception{}
+class WeakPasswordAuthException implements Exception{}
 
 class EmailAlreadyInUseAuthException implements Exception{}
 

@@ -40,17 +40,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     } on FirebaseAuthException catch (e) {
       // Handle different Firebase authentication errors
-      String errorMessage;
       if (e.code == 'user-not-found') {
-        errorMessage = 'User not found';
+        showErrorDialog(context, 'user-not-found');
       } else if (e.code == 'wrong-password') {
-        errorMessage = 'Wrong password';
+        showErrorDialog(context, 'Wrong password');
       } else {
         // Handle other Firebase authentication errors
-        errorMessage = 'An error occurred: ${e.message}';
+        showErrorDialog(context, 'An error occurred: ${e.message}');
       }
-      // Show error dialog
-      showErrorDialog(context, errorMessage);
     } finally {
       setState(() {
         loading = false;
