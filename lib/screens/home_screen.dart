@@ -26,8 +26,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      appBar: AppBar(title: const Text('Home'),automaticallyImplyLeading: false,
+      appBar: AppBar(title: const Text('Your Notes'),automaticallyImplyLeading: false,
        actions: [
+         IconButton(onPressed: (){
+           Navigator.of(context).pushNamed(newNoteRoute);
+         }, icon: const Icon(Icons.add)),
          IconButton(onPressed: (){
            Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
          }, icon: const Icon(Icons.logout))
