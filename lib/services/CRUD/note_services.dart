@@ -14,11 +14,17 @@ class NotesServices {
 
   static final NotesServices _shared =NotesServices._sharedInstances();
 
-  NotesServices._sharedInstances();
+  NotesServices._sharedInstances(){
+   _notesStreamController=StreamController<List<DatabaseNotes>>.broadcast(
+     onListen: (){
+       _notesStreamController.sink.add(_notes);
+     }
+   );
+  }
 
   factory NotesServices()=>_shared;
 
-  final _notesStreamController=StreamController<List<DatabaseNotes>>.broadcast();
+  late final StreamController<List<DatabaseNotes>> _notesStreamController;
 
   Stream<List<DatabaseNotes>> get allNotes=>_notesStreamController.stream;
 
@@ -225,15 +231,16 @@ class NotesServices {
 
       // creating Notes Table
 
-      const createNotesTable = '''CREATE TABLE IF NOT EXISTS "note" (
-	"id"	INTEGER NOT NULL,
-	"user_id"	INTEGER NOT NULL,
-	"text"	TEXT,
-	"is sycned with cloud"	INTEGER NOT NULL DEFAULT 0,
-	FOREIGN KEY("user_id") REFERENCES "user"("id"),
-	PRIMARY KEY("id" AUTOINCREMENT)
-);
-    ''';
+     const createNotesTable=''' CREATE TABLE IF NOT EXISTS "notes" (
+          "id"  INTEGER NOT NULL,
+          "user_id" INTEGER NOT NULL,
+          "text" TEXT,
+          "isSyncedWithCloud" INTEGER NOT NULL DEFAULT 0,
+          FOREIGN KEY("user_id") REFERENCES  "notes" ("id" ),
+    PRIMARY KEY("id"  AUTOINCREMENT)
+    );
+   ''';
+
       await db.execute(createNotesTable);
       await _cacheNote();
     } on MissingPlatformDirectoryException {
@@ -299,4 +306,4 @@ const idColumn = 'id';
 const emailColumn = 'email';
 const userIdColumn = 'user_id';
 const textColumn = 'text';
-const isSyncedWithCloudColumn = 'is synced with cloud';
+const isSyncedWithCloudColumn = 'isSyncedWithCloud';

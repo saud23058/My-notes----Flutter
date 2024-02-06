@@ -11,47 +11,77 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final NotesServices _notesServices;
-  String get userEmail=>AuthServices.firebase().currentUser!.email!;
+  String get userEmail => AuthServices.firebase().currentUser!.email!;
 
   @override
-  void initState(){
- _notesServices=NotesServices();
- super.initState();
+  void initState() {
+    _notesServices = NotesServices();
+    super.initState();
   }
 
-  void dispose(){
-    _notesServices.close();
-    super.dispose();
-  }
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      appBar: AppBar(title: const Text('Your Notes'),automaticallyImplyLeading: false,
-       actions: [
-         IconButton(onPressed: (){
-           Navigator.of(context).pushNamed(newNoteRoute);
-         }, icon: const Icon(Icons.add)),
-         IconButton(onPressed: (){
-           Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
-         }, icon: const Icon(Icons.logout))
-       ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Your Notes'),
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(newNoteRoute);
+            },
+            icon: const Icon(Icons.add),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
+            },
+            icon: const Icon(Icons.logout),
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: _notesServices.getOrCreateUser(email: userEmail),
-        builder: (context,snapshot){
-          switch(snapshot.connectionState){
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            print('Error in getOrCreateUser: ${snapshot.error}');
+            return Text('Error: ${snapshot.error}');
+          }
+          switch (snapshot.connectionState) {
             case ConnectionState.done:
               return StreamBuilder(
-                  stream: _notesServices.allNotes,
-                  builder: (context,snapshot){
-                    switch(snapshot.connectionState){
-                      case ConnectionState.waiting:
-                      case ConnectionState.active:
-                        return const Text('waiting for all notes');
-                      default:
-                        return const CircularProgressIndicator();
-                    }
+                stream: _notesServices.allNotes,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    print('Error in allNotes: ${snapshot.error}');
+                    return Text('Error: ${snapshot.error}');
                   }
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                    case ConnectionState.active:
+                      if (snapshot.hasData) {
+                        final allNotes = snapshot.data as List<DatabaseNotes>;
+                        return ListView.builder(
+                          itemCount: allNotes.length,
+                          itemBuilder: (context, index) {
+                            final note = allNotes[index];
+                            return ListTile(
+                              title: Text(
+                                  note.text,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    default:
+                      return const CircularProgressIndicator();
+                  }
+                },
               );
             default:
               return const CircularProgressIndicator();
