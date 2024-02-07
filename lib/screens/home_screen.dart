@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_notes/routes/routes.dart';
+import 'package:my_notes/screens/notes_list_view.dart';
 import 'package:my_notes/services/CRUD/note_services.dart';
 import 'package:my_notes/services/auth_services.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -34,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
+              Navigator.of(context)
+                  .pushNamedAndRemoveUntil(loginRoute, (route) => false);
             },
             icon: const Icon(Icons.logout),
           ),
@@ -53,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 stream: _notesServices.allNotes,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    print('Error in allNotes: ${snapshot.error}');
                     return Text('Error: ${snapshot.error}');
                   }
                   switch (snapshot.connectionState) {
@@ -61,19 +63,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     case ConnectionState.active:
                       if (snapshot.hasData) {
                         final allNotes = snapshot.data as List<DatabaseNotes>;
-                        return ListView.builder(
-                          itemCount: allNotes.length,
-                          itemBuilder: (context, index) {
-                            final note = allNotes[index];
-                            return ListTile(
-                              title: Text(
-                                  note.text,
-                                maxLines: 1,
-                                softWrap: true,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            );
+                        return NotesListView(
+                          onDeleteNote: (note) async {
+                            await _notesServices.deleteNote(id: note.id);
                           },
+                          notes: allNotes,
                         );
                       } else {
                         return const CircularProgressIndicator();
