@@ -4,14 +4,14 @@ import 'package:my_notes/screens/notes_list_view.dart';
 import 'package:my_notes/services/CRUD/note_services.dart';
 import 'package:my_notes/services/auth_services.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class NotesView extends StatefulWidget {
+  const NotesView({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<NotesView> createState() => _NotesViewState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _NotesViewState extends State<NotesView> {
   late final NotesServices _notesServices;
   String get userEmail => AuthServices.firebase().currentUser!.email!;
 
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).pushNamed(newNoteRoute);
+              Navigator.of(context).pushNamed(createUpdateNoteRoute);
             },
             icon: const Icon(Icons.add),
           ),
@@ -66,6 +66,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         return NotesListView(
                           onDeleteNote: (note) async {
                             await _notesServices.deleteNote(id: note.id);
+                          },
+                          onTap: (note){
+                            Navigator.of(context).pushNamed(createUpdateNoteRoute,
+                              arguments: note,
+                            );
                           },
                           notes: allNotes,
                         );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_notes/routes/routes.dart';
-import 'package:my_notes/screens/home_screen.dart';
+import 'package:my_notes/screens/notes_view.dart';
 import 'package:my_notes/screens/login_screen.dart';
-import 'package:my_notes/screens/new_note_view.dart';
+import 'package:my_notes/screens/create_update_note_view.dart';
 import 'package:my_notes/screens/signup_screen.dart';
 import 'package:my_notes/screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
       routes: {
         loginRoute:(context)=>const LoginScreen(),
         signupRoute:(context)=>const SignupScreen(),
-        homeRoute:(context)=>const HomeScreen(),
+        homeRoute:(context)=>const NotesView(),
         verifyEmailRoute:(context)=>const VerifyEmail(),
-        newNoteRoute:(context)=>const NewNoteView()
+        createUpdateNoteRoute:(context)=>const CreateUpdateNoteView()
       },
     );
   }
