@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:my_notes/services/auth_services.dart';
 import 'package:my_notes/services/cloud/cloud_note.dart';
 import 'package:my_notes/services/cloud/firebase_cloud_storage.dart';
+import 'package:my_notes/utiles/cannot_share_empty_note_dialog.dart';
 import 'package:my_notes/utiles/generics/get_arguments.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({super.key});
@@ -86,6 +88,19 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('New Note'),
+          actions: [
+            IconButton(
+              onPressed: () async {
+                final text=_textController.text;
+                if(_note==null || text.isEmpty){
+                  await showCannotShareEmptyDialog(context);
+                }else{
+                  Share.share(text);
+                }
+              },
+              icon: const Icon(Icons.share),
+            )
+          ],
         ),
         body: FutureBuilder(
             future: createOrGetExistingNote(context),

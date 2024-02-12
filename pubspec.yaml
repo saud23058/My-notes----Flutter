@@ -41,6 +41,7 @@ dependencies:
   path_provider: ^2.1.2
   path: ^1.8.0
   cloud_firestore:
+  share_plus: ^7.2.2
 
 dev_dependencies:
   flutter_test:
